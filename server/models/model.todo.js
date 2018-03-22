@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 
 const todoSchema = new Schema({
   task:  String,
-  status: String,
+  description: String,
+  status: {type:String, default:"incomplate"},
   completed_date : Date
 });
 todoSchema.plugin(timestamps);

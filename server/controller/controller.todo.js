@@ -3,18 +3,24 @@ const User = require('../models/model.user')
 
 module.exports ={
     listTodo: (req, res) => {
-        User.findById(req.body.id).populate('tasks').exec().then(data=>{
+        User.findById(req.body.id)
+        .populate({
+            path:"tasks",
+            // match: {status:"incomplate"},
+        })
+        .exec().then(data=>{
             res.send({
                 name : data.name,
                 email : data.email,
                 tasks : data.tasks
             })
-        })
+        }).catch(err=>res.send(err))
     },
 
     addTodo: (req, res) => {
         let todo = new Todo({
             task: req.body.task,
+            description:req.body.description,
             status: 'incomplate',
             completed_date: null,
         });
