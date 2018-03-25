@@ -98,11 +98,13 @@ new Vue({
             location.reload();
             }).catch(err=>console.log(err))
         },
-        logout(){          
-                FB.logout(function (response){
-                        localStorage.clear()
-                        window.location.href="login.html"
-                    })
+        logout(){      
+            console.log('hereee')
+            localStorage.clear()    
+            window.location.href="login.html"
+            // FB.logout(function (response){
+            //     window.location.href="login.html"
+            // })
         }
     }
 })

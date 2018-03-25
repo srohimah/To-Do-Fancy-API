@@ -25,14 +25,19 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
-        <script src="script/loginFb.js"></script>
+        <!-- <script src="script/loginFb.js"></script> -->
         <script src="script/navbar.js" charset="utf-8"></script>
         <script src="script/complated.js" charset="utf-8"></script>
         <script src="script/vue.js" charset="utf-8"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>       
         <div id="status"></div>
         <script>
-            
+             $( document ).ready(function() {
+                // console.log( "ready!" );
+                if (!localStorage.getItem('apptoken')) {
+                    window.location.href = '/login.html'
+                }
+            });  
         
         </script>
     </body>

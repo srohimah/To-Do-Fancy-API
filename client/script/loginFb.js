@@ -1,15 +1,25 @@
   
   window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '271882970016554',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v2.12'
-    });
+    if (localStorage.getItem('apptoken')) {
+      window.location.href = '/index.html'
+    } else {
+      FB.init({
+        appId      : '271882970016554',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v2.12'
+      });
 
-    FB.getLoginStatus(function(response) {
-      statusChangeCallback(response);
-    });
+      FB.getLoginStatus(function(response) {
+        if (response.status == 'connected') {
+          console.log('try to logout...')
+          FB.logout(function(resp) {
+            console.log('resp === > ', resp)
+            window.location.href = '/login.html'
+          })
+        }
+      })
+    }
 
   };
 
@@ -21,43 +31,30 @@
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'))
 
-  function statusChangeCallback(response) {
-    if (response.status === 'connected') {
-      if(!localStorage.getItem('fbtoken')){
-        localStorage.setItem('fbtoken',response.authResponse.accessToken)
-        console.log(localStorage.fbtoken)
-      axios({
-        method: 'post',
-        url: 'http://localhost:3000/todo/signin',
-        headers:{
-          access_token: localStorage.getItem('fbtoken'),
-        }
-      }).then(function(resLogin){
-        // console.log(resLogin)
-        if (resLogin.data.data) {
-          localStorage.setItem('apptoken',resLogin.data.data)
-          window.location.href = "index.html"
-        } else {
-          window.location.href = "login.html"
-        }
-      }).catch(err=>console.log(err))
-      }
-      
-    } else {
-      // window.location.href = "login.html"
-      document.getElementById('status').innerHTML = '';
-    }
-  }
-
   function checkLoginState() {
     FB.getLoginStatus(function(response) {
-      statusChangeCallback(response);
-    });
-  }
-  function logoutFB(){
-    FB.logout(function (response){
+      if (response.status === 'connected') {
+        if(!localStorage.getItem('fbtoken')){
+          localStorage.setItem('fbtoken',response.authResponse.accessToken)
+          console.log(localStorage.fbtoken)
+          axios({
+            method: 'post',
+            url: 'http://localhost:3000/todo/signin',
+            headers:{
+              access_token: localStorage.getItem('fbtoken'),
+            }
+          }).then(function(resLogin){
+            // console.log(resLogin)
+            if (resLogin.data.data) {
+              localStorage.setItem('apptoken',resLogin.data.data)
+              window.location.href = "index.html"
+            } else {
+              window.location.href = "login.html"
+            }
+          }).catch(err=>console.log(err))
+        }
+      } else {
         localStorage.clear()
-        window.location.href="login.html"
+      }
     })
-}
-
+  }
